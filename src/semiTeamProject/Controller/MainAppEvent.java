@@ -1,6 +1,7 @@
-package Semi_Team_Project.Controller;
+package semiTeamProject.Controller;
 
 import java.awt.FileDialog;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -16,23 +17,25 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
-import Semi_Team_Project.Model.BrowserRatioVO;
-import Semi_Team_Project.Model.ClassifyLogLines;
-import Semi_Team_Project.Model.ExtractRequirementsInfo;
-import Semi_Team_Project.Model.LogInfoVO;
-import Semi_Team_Project.Model.LooksLikeNotLogFileException;
-import Semi_Team_Project.Model.StoreData;
-import Semi_Team_Project.View.MainAppDesign;
-import Semi_Team_Project.View.ViewDialog;
-//
+import semiTeamProject.Model.BrowserRatioVO;
+import semiTeamProject.Model.ClassifyLogLines;
+import semiTeamProject.Model.ExtractRequirementsInfo;
+import semiTeamProject.Model.LineException;
+import semiTeamProject.Model.LogInfoVO;
+import semiTeamProject.Model.LooksLikeNotLogFileException;
+import semiTeamProject.Model.StoreData;
+import semiTeamProject.View.MainAppDesign;
+import semiTeamProject.View.ViewDialog;
+
 public class MainAppEvent extends WindowAdapter implements ActionListener {
 	MainAppDesign md;
 	private boolean opened = false;
 	private String logData;
 	private JTextArea getInfo;
 	private File openFile;
-	private int fileLastModified;
+	private long fileLastModified;
 	private int indexStart, indexEnd;
+	private boolean strictUrl;
 	List<String> logLines;
 	List<LogInfoVO> listLogInfo;
 	ExtractRequirementsInfo eri;
@@ -65,7 +68,33 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 				e.printStackTrace();
 			}
 		}
+		if(ae.getSource() == md.getJmiUrlOption()) {
+			updateUrlOption();
+		}
 	}// actionPerformed
+	
+	public void updateUrlOption() {
+		String optionNow = strictUrl == true ? "예" : "아니오";
+		switch(JOptionPane.showConfirmDialog(md, "URL에서 '?' 기호가 있어야만 parameter의 구분자로 보시겠습니까?\n(이에 따라 key, path 값이 달라질 수 있습니다)\n현재 설정: " + optionNow)) {
+		case JOptionPane.OK_OPTION:
+			if(strictUrl == true) {
+				return;
+			} // end if
+			listLogInfo = null;
+			eri = null;
+			strictUrl = true;
+			break;
+		case JOptionPane.NO_OPTION:
+			if(strictUrl == false) {
+				return;
+			} // end if
+			strictUrl = false;		
+			listLogInfo = null;
+			eri = null;
+			strictUrl = true;
+			break;
+		} // end switch
+	} // updateUrlOption
 
 	@Override
 	public void windowClosing(WindowEvent e) {
@@ -102,8 +131,9 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 		 * 1. 파일 오픈에 필요한 다이얼로그 및 BufferedReader를 지역변수로 설정
 		 */
 		FileDialog fdOpen = new FileDialog(md, "열기", FileDialog.LOAD);
-		BufferedReader br = null;
+		fdOpen.setFile("*.log");
 		fdOpen.setVisible(true);
+		BufferedReader br = null;
 		/*
 		 * 2. fdOpen의 디렉토리의 값이 null일 경우 early return 처리
 		 */
@@ -160,18 +190,33 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 		/*
 		 * 8. 파일의 마지막 수정 시간 업데이트
 		 */
-		fileLastModified = (int) file.lastModified();
+		fileLastModified = file.lastModified();
 		
 		/*
 		 * 9. 로그 정보 및 요구사항 정보 초기화
 		 */
 		listLogInfo = null;
 		eri = null;
+		
+		StringBuilder sb = new StringBuilder();
+		for (String str : logLines) {
+			sb.append(str).append("\n");
+		}
+		md.getInfo().setText(sb.toString());
 	}
 
-	public boolean check() throws LooksLikeNotLogFileException {
+	public boolean check() throws LooksLikeNotLogFileException, LineException {
 		int start = Integer.parseInt(md.getStartLog().getText());
 		int end = Integer.parseInt(md.getEndLog().getText());
+		
+		
+		if(start > end) {
+			throw new LineException("시작 번호를 끝 번호보다 작게 설정해주세요");
+		}
+		if (start > logLines.size() || end > logLines.size()) {
+			throw new LineException("선택한 번호가 로그 파일의 라인 수 보다 큽니다");
+		}
+		start = start < 0 ? 0 : start;
 		boolean flagChanged = false;
 
 		if (listLogInfo == null) {
@@ -182,11 +227,13 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			eri = new ExtractRequirementsInfo(listLogInfo, indexStart, indexEnd);
 			flagChanged = true;
 		}
+		System.out.println("check: " + indexStart + " / " + indexEnd);
 		return flagChanged;
 	}
 
 	public void printView() throws IOException {
 
+		/*
 		// 파일열기창 띄우고, 파일 선택 후 경로+파일명 설정
 		FileDialog fdOpen = new FileDialog(md, "열기", FileDialog.LOAD);
 		fdOpen.setVisible(true);
@@ -212,9 +259,20 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 				br.close();
 			} // end if
 		} // end finally
+		*/
 
 		// jta에 로그를 보여주고 Dialog로 요구사항에서 요구하는 값을 보여준다.
-		new ViewDialog(md, path);
+		try {
+			try {
+				check();
+			} catch (LineException e) {
+				JOptionPane.showMessageDialog(md, e.getMessage());
+				return;
+			}
+			new ViewDialog(md, openFile.getAbsolutePath());
+		} catch (LooksLikeNotLogFileException e) {
+			JOptionPane.showMessageDialog(md, e.getMessage(), "오류", JOptionPane.WARNING_MESSAGE);
+		} // end catch
 
 	}// printView
 
@@ -233,7 +291,12 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			/*
 			 * check 메소드를 불러와 파일이 제대로 열려 있는지 검증 
 			 */
-			check();
+			try {
+				check();
+			} catch (LineException e) {
+				JOptionPane.showMessageDialog(md, e.getMessage());
+				return;
+			}
 			/*
 			 * currentTimeMillis 변수를 생성하여, 현재시간을 밀리초로 변환해줌.
 			 */
@@ -242,21 +305,8 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			 * 파일 저장 시 입력 받은 값으로 파일을 저장하는 것이 아닌, report + 현재시간(밀리초) + dat 파일로 저장하는 것이기 때문에
 			 * 변수로 따로 설정해줌.
 			 */
-			  String folderPath = "c:/dev/report";
-
-			    // 폴더 객체 생성
-			    File folder = new File(folderPath);
-
-			    // 폴더가 존재하지 않으면 폴더 생성
-			    if (!folder.exists()) {
-			        if (!folder.mkdirs()) {
-			            JOptionPane.showMessageDialog(null, "폴더를 생성하는 데 실패했습니다.");
-			            return;
-			        }
-			    }
 			String fileName = "report_" + currentTimeMillis + ".dat";
 
-			File file = new File(folderPath, fileName);
 			/*
 			 * FileDialog를 띄워 파일 저장을 묻고, setFile을 통해, 지정해뒀던 파일의 이름으로 나오게 해줌.
 			 */
@@ -272,6 +322,7 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			 * 파일을 생성함.
 			 */
 			if (filePath != null && fileName != null) {
+				File file = new File(filePath + fileName);
 
 				try (FileWriter writer = new FileWriter(file)) {
 					/*
@@ -292,7 +343,8 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			}
 
 		} catch (LooksLikeNotLogFileException e) {
-			e.printStackTrace();
-		}
+			JOptionPane.showMessageDialog(md, e.getMessage(), "오류", JOptionPane.WARNING_MESSAGE);
+		} // end catch
 	}
+	
 }

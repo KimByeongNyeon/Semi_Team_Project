@@ -1,4 +1,4 @@
-package Semi_Team_Project.View;
+package semiTeamProject.View;
 
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -10,13 +10,13 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
-import Semi_Team_Project.Model.BrowserRatioVO;
-import Semi_Team_Project.Model.ClassifyLogLines;
-import Semi_Team_Project.Model.ExtractRequirementsInfo;
-import Semi_Team_Project.Model.LogInfoVO;
-import Semi_Team_Project.Model.LooksLikeNotLogFileException;
-import Semi_Team_Project.Model.StoreData;
-//
+import semiTeamProject.Model.BrowserRatioVO;
+import semiTeamProject.Model.ClassifyLogLines;
+import semiTeamProject.Model.ExtractRequirementsInfo;
+import semiTeamProject.Model.LogInfoVO;
+import semiTeamProject.Model.LooksLikeNotLogFileException;
+import semiTeamProject.Model.StoreData;
+
 
 @SuppressWarnings("serial")
 public class ViewDialog extends JDialog {
@@ -135,7 +135,7 @@ public class ViewDialog extends JDialog {
 		listLogInfo = cll.getLogInfo();
 		
 		// 7-1. 분류된 데이터 전체를 분석하여 요구사항이 요구하는 값 얻기
-		ExtractRequirementsInfo eri = new ExtractRequirementsInfo(listLogInfo);
+		ExtractRequirementsInfo eri = new ExtractRequirementsInfo(listLogInfo, Integer.parseInt(ad.getStartLog().getText()), Integer.parseInt(ad.getEndLog().getText()));
 		
 		// 8. 데이터를 인스턴스 변수에 담기
 		eri.printRequirementsInfo();

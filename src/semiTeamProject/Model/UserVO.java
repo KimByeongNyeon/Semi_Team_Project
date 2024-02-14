@@ -1,11 +1,11 @@
-package Semi_Team_Project.Model;
-//
-public class User {
+package semiTeamProject.Model;
+
+public class UserVO {
     private String userId;
     private String password;
     private boolean isAdmin;
 
-    public User(String userId, String password, boolean isAdmin) {
+    public UserVO(String userId, String password, boolean isAdmin) {
         this.userId = userId;
         this.password = password;
         this.isAdmin = isAdmin;

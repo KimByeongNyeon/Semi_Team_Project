@@ -1,4 +1,4 @@
-package Semi_Team_Project.View;
+package semiTeamProject.View;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -7,8 +7,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import Semi_Team_Project.Controller.LoginEvent;
-//
+import semiTeamProject.Controller.LoginEvent;
+
 @SuppressWarnings("serial")
 public class LoginDesign extends JFrame{
 	private JTextField iD;
@@ -43,6 +43,8 @@ public class LoginDesign extends JFrame{
 		add(login);
 		
 		LoginEvent le = new LoginEvent(this);
+		iD.addActionListener(le);
+		password.addActionListener(le);
 		login.addActionListener(le);
 		addWindowFocusListener(le);
 		

@@ -1,4 +1,4 @@
-package Semi_Team_Project.Model;
+package semiTeamProject.Model;
 
 import java.io.FileInputStream;
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ import java.util.List;
 public class StoreData {
 	String filePath = "";
 	String readLine;
-	//
+	
 	public StoreData(String path) {
 		this.filePath = path;
 //		System.out.println("path="+path);

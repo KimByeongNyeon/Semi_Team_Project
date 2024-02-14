@@ -1,4 +1,4 @@
-package Semi_Team_Project.Controller;
+package semiTeamProject.Controller;
 
 
 import java.awt.event.ActionEvent;
@@ -10,20 +10,20 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import Semi_Team_Project.Model.User;
-import Semi_Team_Project.View.LoginDesign;
-import Semi_Team_Project.View.MainAppDesign;
-//
+import semiTeamProject.Model.UserVO;
+import semiTeamProject.View.LoginDesign;
+import semiTeamProject.View.MainAppDesign;
+
 public class LoginEvent extends WindowAdapter implements ActionListener {
 	private LoginDesign ld;
-	private Map<String, User> user = new HashMap<>();
+	private Map<String, UserVO> user = new HashMap<>();
 
 	public LoginEvent(LoginDesign ld) {
 		this.ld = ld;
 		
-		user.put("Admin", new User("Admin","1234", true));
-		user.put("root",new User("root", "1111", false));
-		user.put("administrator",new User("administrator", "1234", true));
+		user.put("Admin", new UserVO("Admin","1234", true));
+		user.put("root",new UserVO("root", "1111", false));
+		user.put("administrator",new UserVO("administrator", "1234", true));
 	}
 
 	@Override
@@ -36,6 +36,13 @@ public class LoginEvent extends WindowAdapter implements ActionListener {
 		if (ae.getSource() == ld.getLogin()) {
 			login();
 		}
+		if (ae.getSource() == ld.getiD() || ae.getSource() == ld.getPassword()) {
+			String id = ld.getiD().getText();
+			String pw = String.valueOf(ld.getPassword().getPassword());
+			if(!id.equals("") && !pw.equals("")) {
+				login();
+			}
+		}		
 	}
 
 
@@ -48,7 +55,7 @@ public class LoginEvent extends WindowAdapter implements ActionListener {
 		
 		
 		if (user.containsKey(userId)) {
-			User currentUser = user.get(userId);
+			UserVO currentUser = user.get(userId);
 			if (!currentUser.getPassword().equals(userPw)) {
 				JOptionPane.showMessageDialog(null, "비밀번호를 다시 입력해주세요");
 				System.out.println(userId);

@@ -1,7 +1,7 @@
-package Semi_Team_Project.Model;
+package semiTeamProject.Model;
 
 public class BrowserRatioVO {
-	//
+	
 	private String browser;
 	private int count;
 	private double ratio;

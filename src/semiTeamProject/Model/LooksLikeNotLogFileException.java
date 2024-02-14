@@ -1,5 +1,5 @@
-package Semi_Team_Project.Model;
-//
+package semiTeamProject.Model;
+
 @SuppressWarnings("serial")
 public class LooksLikeNotLogFileException extends Exception {
 	public LooksLikeNotLogFileException() {

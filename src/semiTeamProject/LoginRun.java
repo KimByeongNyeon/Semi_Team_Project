@@ -1,7 +1,7 @@
-package Semi_Team_Project;
+package semiTeamProject;
 
-import Semi_Team_Project.View.LoginDesign;
-//
+import semiTeamProject.View.LoginDesign;
+
 public class LoginRun {
 	public static void main(String[] args) {
 		new LoginDesign();

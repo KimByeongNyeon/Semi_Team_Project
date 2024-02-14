@@ -1,7 +1,7 @@
-package Semi_Team_Project.Model;
+package semiTeamProject.Model;
 
 import java.time.LocalDateTime;
-//
+
 /**
  * HTTP 응답 로그에 대한 정보를 저장하는 Value Object
  */

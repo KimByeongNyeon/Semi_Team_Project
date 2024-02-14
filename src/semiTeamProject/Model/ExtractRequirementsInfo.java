@@ -1,4 +1,4 @@
-package Semi_Team_Project.Model;
+package semiTeamProject.Model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-//
+
 /**
  * (분류한 로그 데이터를) 분석하여 요구사항이 요구하는 데이터를 생성해내는 클래스<br><br>
  * 
@@ -154,8 +154,10 @@ public class ExtractRequirementsInfo {
 		int listSize = listLogInfo.size();
 		indexEnd = indexEnd == LAST ? listSize - 1 : indexEnd;
 		indexEnd = indexEnd >= listSize ? listSize - 1 : indexEnd;
-		indexStart = indexStart < FIRST ? FIRST : indexStart;
 		indexStart = indexStart > indexEnd ? indexEnd : indexStart;
+		indexStart = indexStart < FIRST ? FIRST : indexStart;
+		
+		System.out.println("ExtractRequirementsInfo: " + indexStart + " / " + indexEnd);
 		
 		LogInfoVO logInfo = null;
 		
@@ -185,7 +187,7 @@ public class ExtractRequirementsInfo {
 	 * @param key Map의 키
 	 * @param lineNo Map의 값인 List〈Integer〉에 추가할 정수
 	 */
-	public void addClassifiedDataToMap(Map<String, List<Integer>> map, String key, int lineNo) {
+	private void addClassifiedDataToMap(Map<String, List<Integer>> map, String key, int lineNo) {
 		if(map.containsKey(key)) {
 			map.get(key).add(lineNo);
 		} else {
@@ -203,7 +205,7 @@ public class ExtractRequirementsInfo {
 	 * @param key Map의 키
 	 * @param lineNo Map의 값인 List〈Integer〉에 추가할 정수
 	 */
-	public void addClassifiedDataToMap(Map<Integer, List<Integer>> map, int key, int lineNo) {
+	private void addClassifiedDataToMap(Map<Integer, List<Integer>> map, int key, int lineNo) {
 		if(map.containsKey(key)) {
 			map.get(key).add(lineNo);
 		} else {
@@ -221,7 +223,7 @@ public class ExtractRequirementsInfo {
 	 * @param key Map의 키
 	 * @param lineNo Map의 값인 List〈Integer〉에 추가할 정수
 	 */
-	public void addClassifiedDataToMap(Map<LocalDateTime, List<Integer>> map, LocalDateTime key, int lineNo) {
+	private void addClassifiedDataToMap(Map<LocalDateTime, List<Integer>> map, LocalDateTime key, int lineNo) {
 		if(map.containsKey(key)) {
 			map.get(key).add(lineNo);
 		} else {
@@ -253,6 +255,8 @@ public class ExtractRequirementsInfo {
 			if(listLines.size() > listLinesMost.size()) {
 				listLinesMost = listLines;
 				keyMost = key;
+			} else if(listLines.size() == listLinesMost.size()) {
+				keyMost = keyMost.concat(", ").concat(key);
 			} // end if
 		} // end while
 		
@@ -349,7 +353,15 @@ public class ExtractRequirementsInfo {
 		List<Integer> booksErr = retainAllModified(path.get(PATH_BOOKS), responseResult.get(SERVICE_500));
 		
 		reqBooksErrNum = booksErr.size();
-		reqBooksErrRatio = (double)reqBooksErrNum / path.get("books").size() * 100;
+		if(path.containsKey(PATH_BOOKS)) {
+			if(path.get(PATH_BOOKS) == null  || path.get(PATH_BOOKS).size() == 0) {
+				reqBooksErrRatio = 0.0;
+			} else {
+				reqBooksErrRatio = (double)reqBooksErrNum / path.get(PATH_BOOKS).size() * 100;
+			}			
+		} else {
+			reqBooksErrRatio = 0.0;
+		} // end else
 	} // ExtractService500PerBooks
 	
 	/**
@@ -370,10 +382,18 @@ public class ExtractRequirementsInfo {
 			tempList = lists.get(0);
 			break;
 		default:
-			tempList = new LinkedList<Integer>(lists.get(0));
-			for (int i = 1; i < lenList; i++) {
-				tempList.retainAll(lists.get(i));
-			} // end for
+			if(lists.get(0) == null) {
+				tempList = new LinkedList<Integer>();
+			} else {
+				tempList = new LinkedList<Integer>(lists.get(0));
+				for (int i = 1; i < lenList; i++) {
+					if(lists.get(i) == null) {
+						tempList.clear();					
+					} else {
+						tempList.retainAll(lists.get(i));
+					} // else
+				} // end for
+			} // end else
 		} // end switch
 		
 		return tempList;
@@ -398,10 +418,18 @@ public class ExtractRequirementsInfo {
 			tempList = lists[0];
 			break;
 		default:
-			tempList = new LinkedList<Integer>(lists[0]);
-			for (int i = 1; i < lenList; i++) {
-				tempList.retainAll(lists[i]);
-			} // end for
+			if(lists[0] == null) {
+				tempList = new LinkedList<Integer>();
+			} else {
+				tempList = new LinkedList<Integer>(lists[0]);
+				for (int i = 1; i < lenList; i++) {
+					if(lists[i] == null) {
+						tempList.clear();
+					} else {
+						tempList.retainAll(lists[i]);
+					} // end else
+				} // end for
+			} // end else
 		} // end switch
 		
 		return tempList;
