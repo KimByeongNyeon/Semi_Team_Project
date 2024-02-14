@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import Semi_Team_Project.Model.User;
 import Semi_Team_Project.View.LoginDesign;
 import Semi_Team_Project.View.MainAppDesign;
-
+//
 public class LoginEvent extends WindowAdapter implements ActionListener {
 	private LoginDesign ld;
 	private Map<String, User> user = new HashMap<>();

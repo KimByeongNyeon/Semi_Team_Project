@@ -1,5 +1,5 @@
 package Semi_Team_Project.Model;
-
+//
 public class User {
     private String userId;
     private String password;

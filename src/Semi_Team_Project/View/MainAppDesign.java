@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import Semi_Team_Project.Controller.MainAppEvent;
-
+//
 @SuppressWarnings("serial")
 public class MainAppDesign extends JFrame {
 	/*

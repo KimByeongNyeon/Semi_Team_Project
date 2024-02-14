@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+//
 /**
  * (분류한 로그 데이터를) 분석하여 요구사항이 요구하는 데이터를 생성해내는 클래스<br><br>
  * 

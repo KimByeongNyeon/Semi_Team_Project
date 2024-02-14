@@ -8,7 +8,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import Semi_Team_Project.Controller.LoginEvent;
-
+//
 @SuppressWarnings("serial")
 public class LoginDesign extends JFrame{
 	private JTextField iD;

@@ -14,7 +14,7 @@ import java.util.List;
 public class StoreData {
 	String filePath = "";
 	String readLine;
-	
+	//
 	public StoreData(String path) {
 		this.filePath = path;
 //		System.out.println("path="+path);

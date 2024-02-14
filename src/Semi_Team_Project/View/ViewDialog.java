@@ -16,7 +16,7 @@ import Semi_Team_Project.Model.ExtractRequirementsInfo;
 import Semi_Team_Project.Model.LogInfoVO;
 import Semi_Team_Project.Model.LooksLikeNotLogFileException;
 import Semi_Team_Project.Model.StoreData;
-
+//
 
 @SuppressWarnings("serial")
 public class ViewDialog extends JDialog {

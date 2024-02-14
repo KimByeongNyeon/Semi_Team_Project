@@ -24,7 +24,7 @@ import Semi_Team_Project.Model.LooksLikeNotLogFileException;
 import Semi_Team_Project.Model.StoreData;
 import Semi_Team_Project.View.MainAppDesign;
 import Semi_Team_Project.View.ViewDialog;
-
+//
 public class MainAppEvent extends WindowAdapter implements ActionListener {
 	MainAppDesign md;
 	private boolean opened = false;
