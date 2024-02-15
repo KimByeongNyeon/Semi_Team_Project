@@ -48,9 +48,7 @@ public class LoginEvent extends WindowAdapter implements ActionListener {
 
 	public void login() {
 		String userId = ld.getiD().getText().trim();
-//		char[] userPw = ld.getPassword();
 		String userPw = String.valueOf(ld.getPassword().getPassword());
-//		String userPw = String.valueOf(ld.getPassword().getText());
 		
 		
 		
@@ -58,11 +56,9 @@ public class LoginEvent extends WindowAdapter implements ActionListener {
 			UserVO currentUser = user.get(userId);
 			if (!currentUser.getPassword().equals(userPw)) {
 				JOptionPane.showMessageDialog(null, "비밀번호를 다시 입력해주세요");
-				System.out.println(userId);
-				System.out.println(userPw);
 			} else {
 				ld.dispose();
-				new MainAppDesign(currentUser.isAdmin());
+				new MainAppDesign(currentUser.isAdmin(), currentUser.getUserId());
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "존재하지 않는 아이디 입니다.");

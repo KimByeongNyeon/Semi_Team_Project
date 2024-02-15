@@ -157,7 +157,7 @@ public class ExtractRequirementsInfo {
 		indexStart = indexStart > indexEnd ? indexEnd : indexStart;
 		indexStart = indexStart < FIRST ? FIRST : indexStart;
 		
-		System.out.println("ExtractRequirementsInfo: " + indexStart + " / " + indexEnd);
+//		System.out.println("ExtractRequirementsInfo: " + indexStart + " / " + indexEnd);
 		
 		LogInfoVO logInfo = null;
 		

@@ -1,5 +1,6 @@
 package semiTeamProject.View;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.io.IOException;
@@ -8,8 +9,10 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import semiTeamProject.Controller.MainAppEvent;
 import semiTeamProject.Model.BrowserRatioVO;
 import semiTeamProject.Model.ClassifyLogLines;
 import semiTeamProject.Model.ExtractRequirementsInfo;
@@ -23,18 +26,21 @@ public class ViewDialog extends JDialog {
 	
 	// 1. 디자인 클래스 또는 이벤트 클래스에선 List<LogInfoVO> listLogInfo을 instance 변수로 선언
 	List<LogInfoVO> listLogInfo;
+	
 	MainAppDesign ad;
+	MainAppEvent ae;
+	
+
+	private String path;
+	private String data1, data2, data3, data4, data5, data6;
 	
 	
-	String path;
-	String data1, data2, data3, data4, data5, data6;
 	
 	
-	
-	
-	public ViewDialog(MainAppDesign ad, String path) {
+	public ViewDialog(MainAppDesign ad, MainAppEvent ae, String path) {
 		super(ad, "View : " + path, true);
 		this.ad = ad;
+		this.ae = ae;
 		this.path = path;
 		design();
 		
@@ -42,15 +48,16 @@ public class ViewDialog extends JDialog {
 	
 	private void design() {
 		
-		Font font = new Font("맑은 고딕",Font.BOLD,15);
+		Font fontBorder = new Font("맑은 고딕",Font.BOLD,16);
+		Font font = new Font("맑은 고딕",Font.PLAIN,15);
 		
-		
-		TitledBorder tb1 = new TitledBorder("최다 사용 키의 이름과 횟수");
-		TitledBorder tb2 = new TitledBorder("브라우저별 접속 횟수, 비율");
-		TitledBorder tb3 = new TitledBorder("서비스를 성공적으로 수행한(200) 횟수,실패(404) 횟수");
-		TitledBorder tb4 = new TitledBorder("요청이 가장 많은 시간");
-		TitledBorder tb5 = new TitledBorder("비정상적인 요청(403)이 발생한 횟수,비율");
-		TitledBorder tb6 = new TitledBorder("books에 대한 요청 URL중 에러(500)가 발생한 횟수, 비율");
+		// 수정1
+		TitledBorder tb1 = new TitledBorder(new LineBorder(new Color(0x847DA1)), "최다 사용 키의 이름과 횟수");
+		TitledBorder tb2 = new TitledBorder(new LineBorder(new Color(0x847DA1)), "브라우저별 접속 횟수, 비율");
+		TitledBorder tb3 = new TitledBorder(new LineBorder(new Color(0x847DA1)), "서비스를 성공적으로 수행한(200) 횟수,실패(404) 횟수");
+		TitledBorder tb4 = new TitledBorder(new LineBorder(new Color(0x847DA1)), "요청이 가장 많은 시간");
+		TitledBorder tb5 = new TitledBorder(new LineBorder(new Color(0x847DA1)), "비정상적인 요청(403)이 발생한 횟수,비율");
+		TitledBorder tb6 = new TitledBorder(new LineBorder(new Color(0x847DA1)), "books에 대한 요청 URL중 에러(500)가 발생한 횟수, 비율");
 		
 		JTextArea jta1 = new JTextArea();
 		JTextArea jta2 = new JTextArea();
@@ -59,19 +66,36 @@ public class ViewDialog extends JDialog {
 		JTextArea jta5 = new JTextArea();
 		JTextArea jta6 = new JTextArea();
 		
-		tb1.setTitleFont(font);
-		tb2.setTitleFont(font);
-		tb3.setTitleFont(font);
-		tb4.setTitleFont(font);
-		tb5.setTitleFont(font);
-		tb6.setTitleFont(font);
-		
 		jta1.setBorder(tb1);
 		jta2.setBorder(tb2);
 		jta3.setBorder(tb3);
 		jta4.setBorder(tb4);
 		jta5.setBorder(tb5);
 		jta6.setBorder(tb6);
+		
+		tb1.setTitleFont(fontBorder);
+		tb2.setTitleFont(fontBorder);
+		tb3.setTitleFont(fontBorder);
+		tb4.setTitleFont(fontBorder);
+		tb5.setTitleFont(fontBorder);
+		tb6.setTitleFont(fontBorder);
+		
+		jta1.setFont(font);
+		jta2.setFont(font);
+		jta3.setFont(font);
+		jta4.setFont(font);
+		jta5.setFont(font);
+		jta6.setFont(font);
+		
+		//// 수정2
+		Color backgroundColor = new Color(0xFDFCFF);
+		getContentPane().setBackground(backgroundColor);
+		jta1.setBackground(backgroundColor);
+		jta2.setBackground(backgroundColor);
+		jta3.setBackground(backgroundColor);
+		jta4.setBackground(backgroundColor);
+		jta5.setBackground(backgroundColor);
+		jta6.setBackground(backgroundColor);
 		
 		readLogFile();
 		
@@ -83,14 +107,21 @@ public class ViewDialog extends JDialog {
 		jta6.setText(data6);
 		
 		
-		setLayout(new GridLayout(6,1));
+		setLayout(null);
+		
+		jta1.setBounds(0,0,454,55);
+		jta2.setBounds(0,55,454,140);
+		jta3.setBounds(0,195,454,55);
+		jta4.setBounds(0,250,454,55);
+		jta5.setBounds(0,305,454,55);
+		jta6.setBounds(0,360,454,55);
+		
 		jta1.setEditable(false);
 		jta2.setEditable(false);
 		jta3.setEditable(false);
 		jta4.setEditable(false);
 		jta5.setEditable(false);
 		jta6.setEditable(false);
-		
 		
 		add(jta1);
 		add(jta2);
@@ -99,9 +130,9 @@ public class ViewDialog extends JDialog {
 		add(jta5);
 		add(jta6);
 		
-		
-		setBounds(200,200,500,700);
+		setBounds(ad.getX()+210,ad.getY()+100,470,455);
 		setVisible(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		
@@ -134,11 +165,10 @@ public class ViewDialog extends JDialog {
 		// 6. 분류한 데이터를 인스턴스 변수에 저장
 		listLogInfo = cll.getLogInfo();
 		
-		// 7-1. 분류된 데이터 전체를 분석하여 요구사항이 요구하는 값 얻기
-		ExtractRequirementsInfo eri = new ExtractRequirementsInfo(listLogInfo, Integer.parseInt(ad.getStartLog().getText()), Integer.parseInt(ad.getEndLog().getText()));
+			// 7-1. 분류된 데이터 전체를 분석하여 요구사항이 요구하는 값 얻기
+		ExtractRequirementsInfo eri = ae.getEri();
 		
 		// 8. 데이터를 인스턴스 변수에 담기
-		eri.printRequirementsInfo();
 		
 			// 8-1. 최다 사용 키의 이름과 횟수
 		data1 = eri.getOftenKeyName() + " / " + String.valueOf(eri.getOftenKeyNum());
@@ -167,6 +197,7 @@ public class ViewDialog extends JDialog {
 			// 8-6. books에 대한 요청 URL중 에러(500)가 발생한 횟수, 비율
 		data6 = eri.getReqBooksErrNum() + " / " +
 				String.format("%.2f",eri.getReqBooksErrRatio());
+		
 		
 		
 	}//readLogFile

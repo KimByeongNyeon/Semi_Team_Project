@@ -42,7 +42,6 @@ public class ClassifyLogLines {
 		LocalDateTime ldt = null;
 		
 		String logLine = "";
-//		System.out.println("읽어들인 데이터 줄 수: " + lines.size());
 		
 		Iterator<String> ita = lines.iterator();
 		while(ita.hasNext()) {
@@ -62,7 +61,6 @@ public class ClassifyLogLines {
 			} // end else
 		} // end while
 		
-//		System.out.println("패턴매칭한 데이터 줄 수: " + logInfo.size());
 		switch(logInfo.size()) {
 		case 0:
 			throw new LooksLikeNotLogFileException();

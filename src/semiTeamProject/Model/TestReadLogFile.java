@@ -57,8 +57,6 @@ public class TestReadLogFile {
 	public TestReadLogFile() {
 		
 		// 2. 파일 다이어그램으로 선택한 파일을 가져오기
-		// (추후 File로 받는게 나은지 String으로 받는게 나은지 테스트해야)
-//		File file = new File(pathFile);
 		String pathFile = "C:/Temp/sist_input_1.log";
 		
 		
@@ -91,7 +89,6 @@ public class TestReadLogFile {
 		// 8-1. 테스트용 콘솔 출력 메소드
 		eri.printRequirementsInfo();
 		
-		System.out.println("--------------------------------");
 		
 		// 7-2. 분류된 데이터 일부분을 분석하여 요구사항이 요구하는 값 얻기
 		int indexStart = 499;

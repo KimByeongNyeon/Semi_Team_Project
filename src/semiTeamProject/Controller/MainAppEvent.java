@@ -24,6 +24,7 @@ import semiTeamProject.Model.LineException;
 import semiTeamProject.Model.LogInfoVO;
 import semiTeamProject.Model.LooksLikeNotLogFileException;
 import semiTeamProject.Model.StoreData;
+import semiTeamProject.View.LoginDesign;
 import semiTeamProject.View.MainAppDesign;
 import semiTeamProject.View.ViewDialog;
 
@@ -71,7 +72,15 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 		if(ae.getSource() == md.getJmiUrlOption()) {
 			updateUrlOption();
 		}
+		if(ae.getSource() == md.getJbtnLogout()) {
+			logout();
+		}
 	}// actionPerformed
+	
+	public void logout() {
+		md.dispose();
+		new LoginDesign();
+	}//logout
 	
 	public void updateUrlOption() {
 		String optionNow = strictUrl == true ? "예" : "아니오";
@@ -187,6 +196,9 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			if(br != null) {
 			br.close();}
 		}
+		String fileParent = file.getParent();  
+		String title = fileParent.length() > 20 ? fileParent.substring(0, 21).concat("...").concat(file.getName()) : file.getAbsolutePath(); 
+		md.setTitle("열림: " + title);
 		/*
 		 * 8. 파일의 마지막 수정 시간 업데이트
 		 */
@@ -213,6 +225,9 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 		if(start > end) {
 			throw new LineException("시작 번호를 끝 번호보다 작게 설정해주세요");
 		}
+		if (openFile == null) {
+			throw new LooksLikeNotLogFileException("열린 파일이 없습니다");
+		}
 		if (start > logLines.size() || end > logLines.size()) {
 			throw new LineException("선택한 번호가 로그 파일의 라인 수 보다 큽니다");
 		}
@@ -227,40 +242,10 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			eri = new ExtractRequirementsInfo(listLogInfo, indexStart, indexEnd);
 			flagChanged = true;
 		}
-		System.out.println("check: " + indexStart + " / " + indexEnd);
 		return flagChanged;
 	}
 
 	public void printView() throws IOException {
-
-		/*
-		// 파일열기창 띄우고, 파일 선택 후 경로+파일명 설정
-		FileDialog fdOpen = new FileDialog(md, "열기", FileDialog.LOAD);
-		fdOpen.setVisible(true);
-
-		String path = fdOpen.getDirectory() + fdOpen.getFile();
-		File readFile = new File(path);
-
-		// jta에 선택한 로그를 보여주는일
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(readFile));
-			String lineData = "";
-			StringBuilder sbLog = new StringBuilder();
-
-			while ((lineData = br.readLine()) != null) {
-				sbLog.append(lineData + "\n");
-			} // end while
-
-			md.getInfo().setText(sbLog.toString());
-
-		} finally {
-			if (br != null) {
-				br.close();
-			} // end if
-		} // end finally
-		*/
-
 		// jta에 로그를 보여주고 Dialog로 요구사항에서 요구하는 값을 보여준다.
 		try {
 			try {
@@ -269,14 +254,12 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 				JOptionPane.showMessageDialog(md, e.getMessage());
 				return;
 			}
-			new ViewDialog(md, openFile.getAbsolutePath());
+			new ViewDialog(md, this, openFile.getAbsolutePath());
 		} catch (LooksLikeNotLogFileException e) {
 			JOptionPane.showMessageDialog(md, e.getMessage(), "오류", JOptionPane.WARNING_MESSAGE);
 		} // end catch
 
 	}// printView
-
-	
 
 	public void fileReport() throws IOException {
 		/*
@@ -296,7 +279,7 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 			} catch (LineException e) {
 				JOptionPane.showMessageDialog(md, e.getMessage());
 				return;
-			}
+			} 
 			/*
 			 * currentTimeMillis 변수를 생성하여, 현재시간을 밀리초로 변환해줌.
 			 */
@@ -345,6 +328,10 @@ public class MainAppEvent extends WindowAdapter implements ActionListener {
 		} catch (LooksLikeNotLogFileException e) {
 			JOptionPane.showMessageDialog(md, e.getMessage(), "오류", JOptionPane.WARNING_MESSAGE);
 		} // end catch
+	}
+	
+	public ExtractRequirementsInfo getEri() {
+		return eri;
 	}
 	
 }

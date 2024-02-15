@@ -15,7 +15,6 @@ public class IndexJTextField extends JTextField {
 	
 	@Override
 	public String getText() {
-		// TODO Auto-generated method stub
 		return convertToIndex(super.getText());
 	}
 	public String convertToIndex(String str) {
